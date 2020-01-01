@@ -111,7 +111,14 @@
         [CalledAfterChangeOf(nameof(VelocityTracker))]
         protected virtual void OnAfterVelocityTrackerChange()
         {
-            VelocityEmitter.Source = VelocityTracker;
+            if (VelocityEmitter == null)
+            {
+                return;
+            }
+            if (VelocityEmitter.Source != VelocityTracker)
+            {
+                VelocityEmitter.Source = VelocityTracker;
+            }
         }
 
         /// <summary>
@@ -120,7 +127,24 @@
         [CalledAfterChangeOf(nameof(SpeedThreshold))]
         protected virtual void OnAfterSpeedThresholdChange()
         {
-            FloatRangeValueRemapper.From = new FloatRange(0, SpeedThreshold);
+            if (FloatRangeValueRemapper == null)
+            {
+                return;
+            }
+            if (FloatRangeValueRemapper.From != SpeedThreshold)
+            {
+                FloatRangeValueRemapper.From = new FloatRange(0, SpeedThreshold);
+            }
+        }
+
+        private void OnValidate()
+        {
+            if (Application.isPlaying)
+            {
+                return;
+            }
+            OnAfterVelocityTrackerChange();
+            OnAfterSpeedThresholdChange();
         }
     }
 }
