@@ -131,7 +131,7 @@
             {
                 return;
             }
-            if (FloatRangeValueRemapper.From != SpeedThreshold)
+            if (FloatRangeValueRemapper.From.maximum != SpeedThreshold)
             {
                 FloatRangeValueRemapper.From = new FloatRange(0, SpeedThreshold);
             }
