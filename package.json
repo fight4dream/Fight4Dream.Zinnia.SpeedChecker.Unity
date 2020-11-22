@@ -2,7 +2,7 @@
   "name": "com.fight4dream.zinnia.speedchecker.unity",
   "displayName": "FIGHT4DREAM Zinnia.SpeedChecker.Unity",
   "description": "Check whether the speed from a velocity tracker or a vector exceeds threshold for the Unity software",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "unity": "2018.3",
   "unityRelease": "10f1",
   "keywords": [

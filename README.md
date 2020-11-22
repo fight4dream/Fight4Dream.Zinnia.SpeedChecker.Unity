@@ -18,3 +18,7 @@ https://github.com/fight4dream/Fight4Dream.Zinnia.SpeedChecker.Unity.git
 Code released under the [MIT License][License].
 
 [License]: LICENSE.md
+
+## Credit
+
+Thank Zack Cheng (zkkzkk32312) for extensive testing.

@@ -137,12 +137,8 @@
             }
         }
 
-        private void OnValidate()
+        protected virtual void OnEnable()
         {
-            if (Application.isPlaying)
-            {
-                return;
-            }
             OnAfterVelocityTrackerChange();
             OnAfterSpeedThresholdChange();
         }
