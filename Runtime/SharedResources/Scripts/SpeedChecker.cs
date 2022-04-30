@@ -1,15 +1,12 @@
 ﻿namespace Fight4Dream.Tracking.Velocity
 {
     using System;
-    using Malimbe.MemberChangeMethod;
-    using Malimbe.MemberClearanceMethod;
-    using Malimbe.PropertySerializationAttribute;
-    using Malimbe.XmlDocumentationAttribute;
     using UnityEngine;
     using UnityEngine.Events;
     using Zinnia.Data.Attribute;
     using Zinnia.Data.Type;
     using Zinnia.Data.Type.Transformation;
+    using Zinnia.Extension;
     using Zinnia.Process;
     using Zinnia.Tracking.Velocity;
 
@@ -26,29 +23,60 @@
         {
         }
 
+        [Tooltip("The VelocityTracker to get the current velocity from.")]
+        [SerializeField]
+        private VelocityTracker velocityTracker;
         /// <summary>
         /// The <see cref="VelocityTracker"/> to get the current velocity from.
         /// </summary>
-        [Serialized, Cleared]
-        [field: DocumentedByXml]
-        public VelocityTracker VelocityTracker { get; set; }
+        public VelocityTracker VelocityTracker
+        {
+            get
+            {
+                return velocityTracker;
+            }
+            set
+            {
+                velocityTracker = value;
+                if (this.IsMemberChangeAllowed())
+                {
+                    OnAfterVelocityTrackerChange();
+                }
+            }
+        }
 
+        [Tooltip("The speed that is considered to be exceeding the given threshold.")]
+        [SerializeField]
+        private float speedThreshold = 1f;
         /// <summary>
         /// The speed that is considered to be exceeding the given threshold.
         /// </summary>
-        [Serialized]
-        [field: DocumentedByXml]
-        public float SpeedThreshold { get; set; } = 1f;
+        public float SpeedThreshold
+        {
+            get
+            {
+                return speedThreshold;
+            }
+            set
+            {
+                speedThreshold = value;
+                if (this.IsMemberChangeAllowed())
+                {
+                    OnAfterSpeedThresholdChange();
+                }
+            }
+        }
 
         /// <summary>
         /// Emitted when the distance between the source and the target exceeds the threshold.
         /// </summary>
-        [DocumentedByXml]
+        [Tooltip("Emitted when the distance between the source and the target exceeds the threshold.")]
         public FloatUnityEvent ThresholdExceeded = new FloatUnityEvent();
+
         /// <summary>
         /// Emitted when the distance between the source and the target falls back within the threshold.
         /// </summary>
-        [DocumentedByXml]
+        [Tooltip("Emitted when the distance between the source and the target falls back within the threshold.")]
         public FloatUnityEvent ThresholdResumed = new FloatUnityEvent();
 
         /// <summary>
@@ -57,18 +85,41 @@
         public float Speed { get; set; }
 
         #region Reference Settings
+        [Header("Reference Settings")]
+        [Tooltip("Emits the speed from VelocityTracker and stores in Speed.")]
+        [SerializeField, Restricted]
+        private VelocityEmitter velocityEmitter = null;
         /// <summary>
         /// Emits the speed from <see cref="VelocityTracker"/> and stores in <see cref="Speed"/>.
         /// </summary>
-        [Serialized]
-        [field: Header("Reference Settings"), DocumentedByXml, Restricted]
-        public VelocityEmitter VelocityEmitter { get; protected set; }
+        public VelocityEmitter VelocityEmitter
+        {
+            get
+            {
+                return velocityEmitter;
+            }
+            protected set
+            {
+                velocityEmitter = value;
+            }
+        }
+        [Tooltip("Normalize the Speed according to SpeedThreshold.")]
+        [SerializeField, Restricted]
+        private FloatRangeValueRemapper floatRangeValueRemapper = null;
         /// <summary>
         /// Normalize the <see cref="Speed"/> according to <see cref="SpeedThreshold"/>.
         /// </summary>
-        [Serialized]
-        [field: DocumentedByXml, Restricted]
-        public FloatRangeValueRemapper FloatRangeValueRemapper { get; protected set; }
+        public FloatRangeValueRemapper FloatRangeValueRemapper
+        {
+            get
+            {
+                return floatRangeValueRemapper;
+            }
+            protected set
+            {
+                floatRangeValueRemapper = value;
+            }
+        }
         #endregion
 
         /// <summary>
@@ -108,7 +159,6 @@
         /// <summary>
         /// Called after <see cref="VelocityTracker"/> has been changed.
         /// </summary>
-        [CalledAfterChangeOf(nameof(VelocityTracker))]
         protected virtual void OnAfterVelocityTrackerChange()
         {
             if (VelocityEmitter == null)
@@ -124,7 +174,6 @@
         /// <summary>
         /// Called after <see cref="SpeedThreshold"/> has been changed.
         /// </summary>
-        [CalledAfterChangeOf(nameof(SpeedThreshold))]
         protected virtual void OnAfterSpeedThresholdChange()
         {
             if (FloatRangeValueRemapper == null)
